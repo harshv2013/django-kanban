@@ -100,11 +100,6 @@ class BoardListCreate(APIView):
             # print(res.id)
             # print(res.__dict__)
             creat_collection(res_obj)
-            # Collection.objects.create(**{"name":"BACKLOG","board_id":res.id, "owner_id":res.owner_id})
-            # Collection.objects.create(**{"name":"TODO","board_id":res.id, "owner_id":res.owner_id})
-            # Collection.objects.create(**{"name":"DOING","board_id":res.id, "owner_id":res.owner_id})
-            # Collection.objects.create(**{"name":"TESTING","board_id":res.id, "owner_id":res.owner_id})
-            # Collection.objects.create(**{"name":"DONE","board_id":res.id, "owner_id":res.owner_id})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
