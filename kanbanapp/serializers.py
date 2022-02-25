@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from kanbanapp.models import User, Board
+from kanbanapp.models import User, Board, Collection
 
 
 
@@ -35,3 +35,12 @@ class BoardSerializer(serializers.ModelSerializer):
         model = Board
         # fields = "__all__"
         fields = ['id', 'title','description', 'created_at', 'updated_at', 'owner']
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Collection
+        # fields = "__all__"
+        fields = ['id', 'name','description', 'created_at', 'updated_at', 'owner', 'board']

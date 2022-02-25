@@ -1,8 +1,9 @@
 from django.urls import path
 
 from .views import index, UserListCreate, UserCreate, \
-                         LoginView, UserList, UserDetail, \
-                        BoardListCreate, BoardRetriveUpdateDestroy
+    LoginView, UserList, UserDetail, \
+    BoardListCreate, BoardRetriveUpdateDestroy, \
+    CollectionListCreate, CollectionRetriveUpdateDestroy
 
 
 urlpatterns = [
@@ -16,4 +17,7 @@ urlpatterns = [
 
     path('boards/', BoardListCreate.as_view()),
     path('boards/<int:pk>/', BoardRetriveUpdateDestroy.as_view()),
+
+    path('collections/', CollectionListCreate.as_view()),
+    path('collections/<int:pk>/', CollectionRetriveUpdateDestroy.as_view()),
 ]

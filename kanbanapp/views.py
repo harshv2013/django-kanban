@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from kanbanapp.models import User, Board
+from kanbanapp.models import User, Board, Collection
 from django.http import Http404
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
@@ -8,7 +8,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework import status
-from kanbanapp.serializers import UserSerializer, BoardSerializer
+from kanbanapp.serializers import UserSerializer, BoardSerializer, \
+    CollectionSerializer
+
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -125,6 +127,54 @@ class BoardRetriveUpdateDestroy(APIView):
         board = self.get_object(pk)
         board.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#########**********************************##################
+
+class CollectionListCreate(APIView):
+    """
+    List all boards, or create a new board.
+    """
+    def get(self, request, format=None):
+        collections = Collection.objects.all()
+        serializer = CollectionSerializer(collections, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CollectionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=self.request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CollectionRetriveUpdateDestroy(APIView):
+    """
+    Retrieve, update or delete a board instance.
+    """
+    def get_object(self, pk):
+        try:
+            return Collection.objects.get(pk=pk)
+        except Collection.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        collection = self.get_object(pk)
+        serializer = CollectionSerializer(collection)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        collection = self.get_object(pk)
+        serializer = CollectionSerializer(collection, data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=self.request.user)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        collection = self.get_object(pk)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
