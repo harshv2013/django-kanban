@@ -39,16 +39,16 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        print('request.data----------',request.data)
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        print('balfdfffffffffffffffffffffffffffff',serializer.instance)
+        print(serializer.instance)
         # user = serializer.data['username']
         # user = User.objects.get(pk=pk_of_user_without_token)
-        token = Token.objects.create(user=serializer.instance)
-        print('token---------------------', token)
+        # token = Token.objects.create(user=serializer.instance)
+        # print(token)
         print('serializer.data in UserCreate in create defn is-', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
