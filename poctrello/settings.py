@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'default secret key')
 DEBUG = False
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'django-kanbanapp.herokuapp.com/']
 
 
 # Application definition
