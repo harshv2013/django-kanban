@@ -1,1 +1,1 @@
-web: gunicorn poctrello.wsgi --log-file -
+web: gunicorn poctrello.wsgi
