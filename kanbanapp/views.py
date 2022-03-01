@@ -4,11 +4,15 @@ from kanbanapp.models import User, Board, Collection
 from django.http import Http404
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework import status
-from kanbanapp.serializers import UserSerializer, BoardSerializer, \
+# from kanbanapp.serializers import UserSerializer
+from kanbanapp.serializers import BoardSerializer, \
     CollectionSerializer
 from .collection import creat_collection
 
@@ -16,7 +20,8 @@ from .collection import creat_collection
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
-
+############################################################
+"""
 class UserListCreate(APIView):
 
     def get(self, request, format=None):
@@ -81,7 +86,7 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
+"""
 ################################################################
 
 class BoardListCreate(APIView):
@@ -133,10 +138,92 @@ class BoardRetriveUpdateDestroy(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #########**********************************##################
+class BoardCustomView(viewsets.ViewSet):
+
+        def get_object(self, pk):
+            try:
+                return Board.objects.get(pk=pk)
+            except Board.DoesNotExist:
+                raise Http404
+
+        def customquery(self, request, *args, **kwargs):
+            boards = Board.objects.all()
+            serializer = BoardSerializer(boards, many=True)
+            return Response(serializer.data)
+
+        def list(self, request):
+            queryset = Board.objects.all()
+            serializer = BoardSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+
+        def create(self, request, format=None):
+            serializer = BoardSerializer(data=request.data)
+            if serializer.is_valid():
+                res_obj = serializer.save(owner=self.request.user)
+                # print(res.id)
+                # print(res.__dict__)
+                creat_collection(res_obj)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        def retrieve(self, request, pk=None):
+            queryset = Board.objects.all()
+            board = get_object_or_404(queryset, pk=pk)
+            serializer = BoardSerializer(board)
+            return Response(serializer.data)
+
+
+        def update(self, request, pk, format=None):
+            board = self.get_object(pk)
+            serializer = BoardSerializer(board, data=request.data)
+            if serializer.is_valid():
+                serializer.save(owner=self.request.user)
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        def partial_update(self, request, pk, format=None):
+            board = self.get_object(pk)
+            serializer = BoardSerializer(board, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save(owner=self.request.user)
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # def destroy(self, request, pk=None):
+        #     pass
+
+        def destroy(self, request, pk, format=None):
+            board = self.get_object(pk)
+            board.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+        # @action(detail=False, methods=['get'])
+        # def fetch_myboard(self, request, pk=None):
+        #     print('at line ===================204')
+        #     board = Board.objects.all()
+        #     # board = get_object_or_404(queryset, pk=pk)
+        #     serializer = BoardSerializer(board, many=True)
+        #     return Response(serializer.data)
+
+
+        @action(detail=False)
+        def fetch_board(self, request):
+            queryset = Board.objects.all()
+            serializer = BoardSerializer(queryset, many=True)
+            return Response(serializer.data)
+            
+
+
+
+#############################################################
 
 class CollectionListCreate(APIView):
     """
-    List all boards, or create a new board.
+    List all collection, or create a new collection.
     """
     def get(self, request, format=None):
         collections = Collection.objects.all()
@@ -153,7 +240,7 @@ class CollectionListCreate(APIView):
 
 class CollectionRetriveUpdateDestroy(APIView):
     """
-    Retrieve, update or delete a board instance.
+    Retrieve, update or delete a collection instance.
     """
     def get_object(self, pk):
         try:

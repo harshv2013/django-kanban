@@ -23,8 +23,10 @@ class Collection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, related_name="collections", on_delete=models.CASCADE)
+    # board = models.ForeignKey(
+    #     Board, related_name='collections', on_delete=models.DO_NOTHING)
     board = models.ForeignKey(
-        Board, related_name='collections', on_delete=models.DO_NOTHING)
+        Board, related_name='collections', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

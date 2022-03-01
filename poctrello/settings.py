@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import django_heroku
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +27,8 @@ SECRET_KEY='django-insecure-*$r8dgs#!=j0ov!gd!5*1^54#eh9%yyv$%^3ubi2kz@e9txit5'
 # SECRET_KEY = os.environ.get('SECRET_KEY', 'default secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1', 'django-kanbanapp.herokuapp.com/']
@@ -134,6 +135,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+APPEND_SLASH=False
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -151,6 +154,7 @@ WHITENOISE_USE_FINDERS = True
 
 
 AUTH_USER_MODEL = 'kanbanapp.User'
+# AUTH_USER_MODEL = 'authuser.User'
 
 REST_FRAMEWORK = {
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -174,3 +178,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 django_heroku.settings(locals())
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+}

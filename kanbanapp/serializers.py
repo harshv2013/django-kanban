@@ -3,7 +3,8 @@ from rest_framework import serializers
 from kanbanapp.models import User, Board, Collection
 
 
-
+#################################################################
+"""
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -25,8 +26,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-
-##########################################################
+"""
+###################################################################
 
 class BoardSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
