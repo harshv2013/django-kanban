@@ -10,7 +10,6 @@ vndk
 rawsqlquery.py
 credentials.py
 test1.py
-
 .vscode/
 
 # C extensions
