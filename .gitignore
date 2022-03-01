@@ -11,7 +11,7 @@ rawsqlquery.py
 credentials.py
 test1.py
 
-# .vscode/
+.vscode/
 
 # C extensions
 *.so
