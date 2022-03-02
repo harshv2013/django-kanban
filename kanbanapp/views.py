@@ -18,7 +18,7 @@ from .collection import creat_collection
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Hello, world. You're at the trello home page.")
 
 ############################################################
 """
@@ -137,7 +137,8 @@ class BoardRetriveUpdateDestroy(APIView):
         board.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-#########**********************************##################
+
+# ########**********************************##################
 class BoardCustomView(viewsets.ViewSet):
 
         def get_object(self, pk):
