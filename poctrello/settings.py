@@ -47,9 +47,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'kanbanapp',
+    'todo',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,6 +64,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'poctrello.urls'
+
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000',]
 
 TEMPLATES = [
     {
@@ -155,19 +160,19 @@ WHITENOISE_USE_FINDERS = True
 
 AUTH_USER_MODEL = 'kanbanapp.User'
 # AUTH_USER_MODEL = 'authuser.User'
-
-REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #            'rest_framework.authentication.TokenAuthentication',
-    # ),
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES':(
-                'rest_framework.permissions.IsAuthenticated',
-    ),
-
-}
+# Uncomment below to use jwt auth
+# REST_FRAMEWORK = {
+#     # 'DEFAULT_AUTHENTICATION_CLASSES': (
+#     #            'rest_framework.authentication.TokenAuthentication',
+#     # ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES':(
+#                 'rest_framework.permissions.IsAuthenticated',
+#     ),
+#
+# }
 
 
 
@@ -180,7 +185,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
     'ROTATE_REFRESH_TOKENS': True,
 }
