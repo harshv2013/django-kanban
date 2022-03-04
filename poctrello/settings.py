@@ -161,18 +161,18 @@ WHITENOISE_USE_FINDERS = True
 AUTH_USER_MODEL = 'kanbanapp.User'
 # AUTH_USER_MODEL = 'authuser.User'
 # Uncomment below to use jwt auth
-# REST_FRAMEWORK = {
-#     # 'DEFAULT_AUTHENTICATION_CLASSES': (
-#     #            'rest_framework.authentication.TokenAuthentication',
-#     # ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES':(
-#                 'rest_framework.permissions.IsAuthenticated',
-#     ),
-#
-# }
+REST_FRAMEWORK = {
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #            'rest_framework.authentication.TokenAuthentication',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES':(
+                'rest_framework.permissions.IsAuthenticated',
+    ),
+
+}
 
 
 
