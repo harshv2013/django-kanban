@@ -23,7 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['access'] = str(refresh.access_token)
 
         # Add extra responses here
-        data['user'] = self.user.username
+        data['username'] = self.user.username
         # data['date'] = datetime.date.today()
         return data
 
