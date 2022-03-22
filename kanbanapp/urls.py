@@ -3,7 +3,7 @@ from django.urls import include, path
 # from .views import BoardListCreate, BoardRetriveUpdateDestroy
 from .views import index,CollectionListCreate, \
     CollectionRetriveUpdateDestroy, \
-    BoardCustomView
+    BoardCustomView, TaskListCreate
 
 # from .views import UserListCreate, UserCreate, \
 #     LoginView, UserList, UserDetail
@@ -37,4 +37,6 @@ urlpatterns = [
 
     path('collections/', CollectionListCreate.as_view()),
     path('collections/<int:pk>/', CollectionRetriveUpdateDestroy.as_view()),
+
+    path('tasks/', TaskListCreate.as_view()),
 ]

@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from kanbanapp.models import User, Board, Collection
+from kanbanapp.models import User, Board, Collection, Task
 
 
 #################################################################
@@ -38,10 +38,20 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = ['id', 'title','description', 'created_at', 'updated_at', 'owner']
 
 
+class TaskSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Task
+        # fields = "__all__"
+        fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'collection']
+
 class CollectionSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    tasks = TaskSerializer(many=True)
 
     class Meta:
         model = Collection
         # fields = "__all__"
-        fields = ['id', 'name','description', 'created_at', 'updated_at', 'owner', 'board']
+        fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'board','tasks']
+        read_only_fields = ['tasks']

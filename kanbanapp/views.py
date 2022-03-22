@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from kanbanapp.models import User, Board, Collection
+from kanbanapp.models import User, Board, Collection, Task
 from django.http import Http404
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 # from kanbanapp.serializers import UserSerializer
 from kanbanapp.serializers import BoardSerializer, \
-    CollectionSerializer
+    CollectionSerializer, TaskSerializer
 from .collection import creat_collection
 
 
@@ -227,7 +227,12 @@ class CollectionListCreate(APIView):
     List all collection, or create a new collection.
     """
     def get(self, request, format=None):
-        collections = Collection.objects.all()
+        # print('req is===',request.query_params)
+        board_id = request.query_params.get('board_id', 337)
+        # print('board id***********',board_id)
+        # board_id = request.data.get('board_id',337)
+        # collections = Collection.objects.all()
+        collections = Collection.objects.filter(board=board_id)
         serializer = CollectionSerializer(collections, many=True)
         return Response(serializer.data)
 
@@ -245,6 +250,7 @@ class CollectionRetriveUpdateDestroy(APIView):
     """
     def get_object(self, pk):
         try:
+            # return Collection.objects.get(pk=pk)
             return Collection.objects.get(pk=pk)
         except Collection.DoesNotExist:
             raise Http404
@@ -266,6 +272,29 @@ class CollectionRetriveUpdateDestroy(APIView):
         collection = self.get_object(pk)
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+###################################################################
+
+
+class TaskListCreate(APIView):
+    """
+    List all boards, or create a new board.
+    """
+    def get(self, request, format=None):
+        boards = Task.objects.all()
+        serializer = TaskSerializer(boards, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            res_obj = serializer.save(owner=self.request.user)
+            # print(res.id)
+            # print(res.__dict__)
+            # creat_collection(res_obj)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

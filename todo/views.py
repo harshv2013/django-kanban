@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .serializers import TodoSerializer
 from rest_framework import viewsets
 from .models import Todo, Student
-
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -10,6 +10,7 @@ from .serializers import *
 
 
 class TodoView(viewsets.ModelViewSet):
+    permission_classes = (AllowAny,)
     serializer_class = TodoSerializer
     queryset = Todo.objects.all()
 
