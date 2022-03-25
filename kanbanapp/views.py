@@ -11,6 +11,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
+from .paginations import CustomPagination
 # from kanbanapp.serializers import UserSerializer
 from kanbanapp.serializers import BoardSerializer, \
     CollectionSerializer, TaskSerializer
@@ -295,6 +297,41 @@ class TaskListCreate(APIView):
             # creat_collection(res_obj)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+###################################################################################
+#
+# class TaskSearch(viewsets.ModelViewSet):
+#     # pagination_class = CustomPagination
+#     # pagination_class = PageNumberPagination
+#     queryset = Task.objects.all()
+#     serializer_class =TaskSerializer
+#
+# #
+
+
+class TaskSearch(APIView):
+    page_size = 2
+    # pagination_class = CustomPagination
+    # pagination_class = PageNumberPagination
+    # queryset = Task.objects.all()
+    # serializer_class =TaskSerializer
+
+    def get(self, request, format=None):
+        search_text = request.query_params.get('search_text')
+        print('search text====',search_text)
+        boards = Task.objects.all()
+        if search_text:
+            boards = boards.filter(name__icontains=search_text)
+        # paginator = PageNumberPagination()
+        paginator = CustomPagination()
+        paginator.page_size = self.page_size
+        result_page = paginator.paginate_queryset(boards, request)
+        serializer = TaskSerializer(result_page, many=True)
+        # return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
+
+
 
 
 
