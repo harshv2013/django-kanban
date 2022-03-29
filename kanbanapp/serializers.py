@@ -55,3 +55,13 @@ class CollectionSerializer(serializers.ModelSerializer):
         # fields = "__all__"
         fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'board','tasks']
         read_only_fields = ['tasks']
+
+class NewCollectionSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    tasks = TaskSerializer(many=True)
+
+    class Meta:
+        model = Collection
+        # fields = "__all__"
+        fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'board','tasks']
+        read_only_fields = ['tasks']

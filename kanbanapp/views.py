@@ -15,7 +15,7 @@ from rest_framework.pagination import PageNumberPagination
 from .paginations import CustomPagination
 # from kanbanapp.serializers import UserSerializer
 from kanbanapp.serializers import BoardSerializer, \
-    CollectionSerializer, TaskSerializer
+    CollectionSerializer, NewCollectionSerializer, TaskSerializer
 from .collection import creat_collection
 
 
@@ -230,12 +230,10 @@ class CollectionListCreate(APIView):
     """
     def get(self, request, format=None):
         # print('req is===',request.query_params)
+        search_text = request.query_params.get('search_text')
         board_id = request.query_params.get('board_id', 337)
-        # print('board id***********',board_id)
-        # board_id = request.data.get('board_id',337)
-        # collections = Collection.objects.all()
         collections = Collection.objects.filter(board=board_id)
-        serializer = CollectionSerializer(collections, many=True)
+        serializer = NewCollectionSerializer(collections ,many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -281,7 +279,7 @@ class CollectionRetriveUpdateDestroy(APIView):
 
 class TaskListCreate(APIView):
     """
-    List all boards, or create a new board.
+    List all tasks, or create a new board.
     """
     def get(self, request, format=None):
         boards = Task.objects.all()
@@ -311,7 +309,7 @@ class TaskListCreate(APIView):
 
 
 class TaskSearch(APIView):
-    page_size = 2
+    page_size = 3
     # pagination_class = CustomPagination
     # pagination_class = PageNumberPagination
     # queryset = Task.objects.all()
@@ -319,7 +317,6 @@ class TaskSearch(APIView):
 
     def get(self, request, format=None):
         search_text = request.query_params.get('search_text')
-        print('search text====',search_text)
         boards = Task.objects.all()
         if search_text:
             boards = boards.filter(name__icontains=search_text)
