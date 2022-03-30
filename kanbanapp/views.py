@@ -233,7 +233,11 @@ class CollectionListCreate(APIView):
         search_text = request.query_params.get('search_text')
         board_id = request.query_params.get('board_id', 337)
         collections = Collection.objects.filter(board=board_id)
-        serializer = NewCollectionSerializer(collections ,many=True)
+        context_data = {
+            "search_text": search_text
+        }
+        print('context at line no--243', context_data)
+        serializer = NewCollectionSerializer(collections, context=context_data, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -309,7 +313,7 @@ class TaskListCreate(APIView):
 
 
 class TaskSearch(APIView):
-    page_size = 30
+    page_size = 2
     # pagination_class = CustomPagination
     # pagination_class = PageNumberPagination
     # queryset = Task.objects.all()

@@ -68,10 +68,21 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 class NewCollectionSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    tasks = TaskSerializer(many=True)
+    # tasks = TaskSerializer(many=True)
+    tasks = serializers.SerializerMethodField('get_tasks')
 
     class Meta:
         model = Collection
         # fields = "__all__"
         fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'board','tasks']
         read_only_fields = ['tasks']
+
+    def get_tasks(self, obj):
+        search_text = self.context.get('search_text')
+        tasks = Task.objects.filter(collection=obj)
+        if search_text:
+            tasks = tasks.filter(name__icontains=search_text)
+        # tasks = Task.objects.all()
+        serializer = TaskSerializer(instance=tasks, many=True)
+        return serializer.data
+
