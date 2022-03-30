@@ -38,8 +38,18 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = ['id', 'title','description', 'created_at', 'updated_at', 'owner']
 
 
+class MyCollectionSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Collection
+        # fields = "__all__"
+        fields = ['id', 'name', 'created_at', 'updated_at', 'owner', 'board']
+        # fields = ['id', 'name']
+
 class TaskSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    collection = MyCollectionSerializer()
 
     class Meta:
         model = Task

@@ -309,7 +309,7 @@ class TaskListCreate(APIView):
 
 
 class TaskSearch(APIView):
-    page_size = 3
+    page_size = 30
     # pagination_class = CustomPagination
     # pagination_class = PageNumberPagination
     # queryset = Task.objects.all()
@@ -317,13 +317,22 @@ class TaskSearch(APIView):
 
     def get(self, request, format=None):
         search_text = request.query_params.get('search_text')
-        boards = Task.objects.all()
+        board_id = request.query_params.get('board_id')
+        print('board id====',type(board_id))
+        board = Board.objects.filter(id=755)
+        print('board====',[b for b in board ])
+        col= Collection.objects.filter(board=755)
+        print('collection===', [c for c in col])
+        tasks = Task.objects.filter(collection__board=board_id)
+        # tasks = Task.objects.filter(collection__board=755)
+        # tasks = Task.objects.filter(collection=3701)
+        # tasks = Task.objects.all()
         if search_text:
-            boards = boards.filter(name__icontains=search_text)
+            tasks = tasks.filter(name__icontains=search_text)
         # paginator = PageNumberPagination()
         paginator = CustomPagination()
         paginator.page_size = self.page_size
-        result_page = paginator.paginate_queryset(boards, request)
+        result_page = paginator.paginate_queryset(tasks, request)
         serializer = TaskSerializer(result_page, many=True)
         # return Response(serializer.data)
         return paginator.get_paginated_response(serializer.data)
