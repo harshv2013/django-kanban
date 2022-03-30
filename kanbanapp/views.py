@@ -323,6 +323,7 @@ class TaskSearch(APIView):
         print('board====',[b for b in board ])
         col= Collection.objects.filter(board=755)
         print('collection===', [c for c in col])
+        
         tasks = Task.objects.filter(collection__board=board_id)
         # tasks = Task.objects.filter(collection__board=755)
         # tasks = Task.objects.filter(collection=3701)
