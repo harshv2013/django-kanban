@@ -232,6 +232,7 @@ class CollectionListCreate(APIView):
         # print('req is===',request.query_params)
         search_text = request.query_params.get('search_text')
         board_id = request.query_params.get('board_id', 337)
+        print('board id 235======',board_id)
         collections = Collection.objects.filter(board=board_id)
         context_data = {
             "search_text": search_text

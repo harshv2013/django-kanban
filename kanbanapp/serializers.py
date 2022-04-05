@@ -37,6 +37,10 @@ class BoardSerializer(serializers.ModelSerializer):
         # fields = "__all__"
         fields = ['id', 'title','description', 'created_at', 'updated_at', 'owner']
 
+    # def create(self, validated_data):
+    #     pass
+
+
 
 class MyCollectionSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -79,7 +83,9 @@ class NewCollectionSerializer(serializers.ModelSerializer):
 
     def get_tasks(self, obj):
         search_text = self.context.get('search_text')
-        tasks = Task.objects.filter(collection=obj)
+        # tasks = Task.objects.filter(collection=obj)
+        # TODO 1. Sorting 2. pagination 3. UnitTest
+        tasks = Task.objects.filter(collection=obj).order_by("-created_at")
         if search_text:
             tasks = tasks.filter(name__icontains=search_text)
         # tasks = Task.objects.all()
